@@ -78,6 +78,7 @@ if calculate:
 # --- История расчётов в сворачиваемом expander ---
 if st.session_state.history:
     with st.expander("📜 Показать историю последних расчётов", expanded=False):
+         st.button("Очистить историю", on_click=clear_history, use_container_width=True)
         for i, entry in enumerate(reversed(st.session_state.history[-5:]), 1):
             st.write(f"**Расчёт {i}:**")
             st.write(f"Углеводы: {entry['Углеводы']} г, Белки: {entry['Белки']} г, Жиры: {entry['Жиры']} г")
@@ -86,7 +87,7 @@ if st.session_state.history:
             st.write(f"💠 Общая ХЕ: {entry['Общая ХЕ']:.2f}")
             st.markdown("---")
 
-        st.button("Очистить историю", on_click=clear_history, use_container_width=True)
+        
 # --- Подпись ---
 st.markdown("---")
 st.caption("📘 Формулы: 10 г углеводов = 1 ХE | 100 ккал = 1 ХЕ")
