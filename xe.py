@@ -6,7 +6,7 @@ st.set_page_config(
     page_icon="https://cdn-icons-png.flaticon.com/512/1046/1046784.png",  # иконка хлеба
     layout="centered"
 )
-#
+
 
 # --- Вставка apple-touch-icon для iOS и PWA ---
 st.markdown("""
@@ -41,6 +41,7 @@ def clear_history():
 carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, value=st.session_state.carbs, key="carbs")
 protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, value=st.session_state.protein, key="protein")
 fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, value=st.session_state.fat, key="fat")
+portions = st.number_input("Количество порций:", min_value=1, step=1, value=1)
 
 # --- Кнопки ---
 col1, col2, col3 = st.columns([1,1,1])
@@ -52,16 +53,48 @@ with col2:
 
 # --- Логика расчёта ---
 if calculate:
-    calories = (carbs * 4) + (protein * 4) + (fat * 9)
-    xe_carbs = carbs / 10
-    xe_calories = calories / 100
-    xe_total = xe_carbs + xe_calories
+    # --- Общие значения на одну порцию ---
+    calories_single = (carbs*4 + protein*4 + fat*9)
+    xe_carbs_single = carbs / 10
+    xe_calories_single = calories_single / 100
+    xe_total_single = xe_carbs_single + xe_calories_single
 
-    st.success("✅ Результаты расчёта:")
-    st.metric("Общая калорийность", f"{calories:.1f} ккал")
-    st.metric("ХЕ по углеводам", f"{xe_carbs:.2f}")
-    st.metric("БЖЕ", f"{xe_calories:.2f}")
-    st.metric("💠 Общая сумма ХЕ", f"{xe_total:.2f}")
+    # --- Умножаем на количество порций для общего значения ---
+    calories_total = calories_single * portions
+    xe_carbs_total = xe_carbs_single * portions
+    xe_calories_total = xe_calories_single * portions
+    xe_total_total = xe_total_single * portions
+
+    # --- Значения на порцию ---
+    calories_per_portion = calories_total / portions
+    xe_carbs_per_portion = xe_carbs_total / portions
+    xe_calories_per_portion = xe_calories_total / portions
+    xe_total_per_portion = xe_total_total / portions
+
+    # --- Отображение результатов ---
+    st.success(f"✅ Общие результаты (для {portions} порций):")
+    st.metric("Общая калорийность", f"{calories_total:.1f} ккал")
+    st.metric("ХЕ по углеводам", f"{xe_carbs_total:.2f}")
+    st.metric("ХЕ по калорийности", f"{xe_calories_total:.2f}")
+    st.metric("💠 Общая сумма ХЕ", f"{xe_total_total:.2f}")
+
+    st.info("На одну порцию:")
+    st.write(f"Калорийность: {calories_per_portion:.1f} ккал")
+    st.write(f"ХЕ по углеводам: {xe_carbs_per_portion:.2f}")
+    st.write(f"ХЕ по калорийности: {xe_calories_per_portion:.2f}")
+    st.write(f"💠 Общая ХЕ: {xe_total_per_portion:.2f}")
+
+    # --- Добавляем в историю ---
+    st.session_state.history.append({
+        "Углеводы": carbs,
+        "Белки": protein,
+        "Жиры": fat,
+        "Порции": portions,
+        "Калорийность (всего)": calories_total,
+        "ХЕ по углеводам (всего)": xe_carbs_total,
+        "ХЕ по калорийности (всего)": xe_calories_total,
+        "Общая ХЕ (всего)": xe_total_total
+    })
 
     # --- Добавление записи в историю ---
     st.session_state.history.append({
