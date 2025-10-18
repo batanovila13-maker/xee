@@ -27,7 +27,7 @@ with col2:
 
 # --- Логика ---
 if reset:
-    session.run_id += 1
+   st.rerun(*, scope="app")
 
 
 if calculate:
