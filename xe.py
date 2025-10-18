@@ -6,19 +6,7 @@ st.set_page_config(
     page_icon="https://cdn-icons-png.flaticon.com/512/1046/1046784.png",  # иконка хлеба
     layout="centered"
 )
-st.markdown("""
-<!-- Подключаем PWA -->
-<link rel="manifest" href="manifest.json">
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register("service-worker.js")
-    .then(reg => console.log("Service Worker зарегистрирован:", reg.scope))
-    .catch(err => console.log("Ошибка регистрации Service Worker:", err));
-  });
-}
-</script>
-""", unsafe_allow_html=True)
+
 
 # --- Вставка apple-touch-icon для iOS и PWA ---
 st.markdown("""
