@@ -36,8 +36,7 @@ with col1:
     calculate = st.button("Рассчитать ХЕ", use_container_width=True, type="primary")
 with col2:
     st.button("Сбросить поля", on_click=reset_fields, use_container_width=True)
-with col3:
-    st.button("Очистить историю", on_click=clear_history, use_container_width=True)
+
 
 # --- Логика расчёта ---
 if calculate:
@@ -65,7 +64,7 @@ if calculate:
 
 # --- История расчётов ---
 if st.session_state.history:
-    st.markdown("### 📜 История последних расчётов")
+    st.markdown("### 📜 История расчётов")
     for i, entry in enumerate(reversed(st.session_state.history[-5:]), 1):  # Показываем последние 5
         st.write(f"**Расчёт {i}:**")
         st.write(f"Углеводы: {entry['Углеводы']} г, Белки: {entry['Белки']} г, Жиры: {entry['Жиры']} г")
@@ -73,6 +72,8 @@ if st.session_state.history:
         st.write(f"ХЕ по углеводам: {entry['ХЕ по углеводам']:.2f}, ХЕ по калорийности: {entry['ХЕ по калорийности']:.2f}")
         st.write(f"💠 Общая ХЕ: {entry['Общая ХЕ']:.2f}")
         st.markdown("---")
+
+st.button("Очистить историю", on_click=clear_history, use_container_width=True)
 
 # --- Подпись ---
 st.markdown("---")
