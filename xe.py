@@ -40,7 +40,8 @@ def reset_fields():
     st.session_state.carbs = 0.0
     st.session_state.protein = 0.0
     st.session_state.fat = 0.0
-
+    st.session_state.portions = 1
+    
 def clear_history():
     st.session_state.history = []
 
