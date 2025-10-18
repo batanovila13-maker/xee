@@ -27,7 +27,7 @@ with col2:
 
 # --- Логика ---
 if reset:
-   st.rerun(*, scope="app")
+   st.rerun(scope="app")
 
 
 if calculate:
