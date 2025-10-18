@@ -15,6 +15,39 @@ st.markdown("""
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 """, unsafe_allow_html=True)
+
+# --- Слайдер для смены темы ---
+theme_option = st.slider("Выберите тему", 0, 1, 0, format="%d")  # 0 - светлая, 1 - тёмная
+st.session_state.theme = "dark" if theme_option == 1 else "light"
+
+# --- Применение темы через CSS ---
+if st.session_state.theme == "dark":
+    st.markdown("""
+    <style>
+    .reportview-container {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .stButton>button {
+        background-color: #333333;
+        color: #e0e0e0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <style>
+    .reportview-container {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    .stButton>button {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # --- Заголовок ---
 st.title("🍞 Калькулятор Хлебных Единиц (ХЕ)")
 st.write("Введите данные и получите расчёт ХЕ по углеводам, калорийности и общую сумму.")
