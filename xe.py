@@ -73,7 +73,7 @@ if calculate:
     })
 
 # --- История расчётов в сворачиваемом expander ---
-st.button("Очистить историю", on_click=clear_history, use_container_width=True)
+
 
 if st.session_state.history:
     with st.expander("📜 Показать историю последних расчётов", expanded=False):
