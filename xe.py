@@ -7,21 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- PWA meta-теги и manifest ---
-st.markdown("""
-<!-- Иконки и PWA настройки -->
-<link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
-
-<meta name="theme-color" content="#ffffff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<!-- Для Android и Chrome -->
-<link rel="manifest" href="manifest.json">
-""", unsafe_allow_html=True)
-# --- Вставка apple-touch-icon для iOS и PWA настроек ---
+# --- Вставка apple-touch-icon для iOS и PWA ---
 st.markdown("""
 <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
@@ -29,6 +15,7 @@ st.markdown("""
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 """, unsafe_allow_html=True)
+
 
 
 # --- Заголовок ---
