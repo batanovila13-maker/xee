@@ -27,9 +27,9 @@ if ("serviceWorker" in navigator) {
 """, unsafe_allow_html=True)
 
 # --- Инициализация состояния ---
-for key in ["carbs", "protein", "fat", "history"]:
+for key in ["carbs", "protein", "fat", "portions", "history"]:
     if key not in st.session_state:
-        st.session_state[key] = 0.0 if key in ["carbs", "protein", "fat"] else []
+        st.session_state[key] = 0.0 if key in ["carbs", "protein", "fat"] else 1 if key=="portions" else []
 
 # --- Заголовок ---
 st.title("🍞 Калькулятор Хлебных Единиц (ХЕ)")
@@ -41,15 +41,15 @@ def reset_fields():
     st.session_state.protein = 0.0
     st.session_state.fat = 0.0
     st.session_state.portions = 1
-    
+
 def clear_history():
     st.session_state.history = []
 
-# --- Поля ввода ---
-carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, value=st.session_state.carbs)
-protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, value=st.session_state.protein)
-fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, value=st.session_state.fat)
-portions = st.number_input("Количество порций:", min_value=1, step=1, value=1)
+# --- Поля ввода с ключами ---
+carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, key="carbs")
+protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, key="protein")
+fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, key="fat")
+portions = st.number_input("Количество порций:", min_value=1, step=1, key="portions")
 
 # --- Кнопки ---
 col1, col2 = st.columns(2)
@@ -63,32 +63,32 @@ if calculate:
     # --- Единичные значения ---
     calories_single = carbs*4 + protein*4 + fat*9
     xe_carbs_single = carbs / 10
-    xe_calories_single = calories_single / 100
-    xe_total_single = xe_carbs_single + xe_calories_single
+    bje_single = (protein*4 + fat*9) / 100  # БЖЕ только белки и жиры
+    xe_total_single = xe_carbs_single + bje_single
 
     # --- Общие значения с умножением на количество порций ---
     calories_total = calories_single * portions
     xe_carbs_total = xe_carbs_single * portions
-    xe_calories_total = xe_calories_single * portions
-    xe_total_total = xe_total_single * portions
+    bje_total = bje_single * portions
+    xe_total_total = xe_carbs_total + bje_total
 
     # --- Значения на порцию ---
     calories_per_portion = calories_total / portions
     xe_carbs_per_portion = xe_carbs_total / portions
-    xe_calories_per_portion = xe_calories_total / portions
+    bje_per_portion = bje_total / portions
     xe_total_per_portion = xe_total_total / portions
 
     # --- Отображение ---
     st.success(f"✅ Общие результаты (для {portions} порций):")
     st.metric("Общая калорийность", f"{calories_total:.1f} ккал")
     st.metric("ХЕ по углеводам", f"{xe_carbs_total:.2f}")
-    st.metric("БЖЕ", f"{xe_calories_total:.2f}")
+    st.metric("БЖЕ", f"{bje_total:.2f}")
     st.metric("💠 Общая сумма ХЕ", f"{xe_total_total:.2f}")
 
     st.info("На одну порцию:")
     st.write(f"Калорийность: {calories_per_portion:.1f} ккал")
     st.write(f"ХЕ по углеводам: {xe_carbs_per_portion:.2f}")
-    st.write(f"БЖЕ: {xe_calories_per_portion:.2f}")
+    st.write(f"БЖЕ: {bje_per_portion:.2f}")
     st.write(f"💠 Общая ХЕ: {xe_total_per_portion:.2f}")
 
     # --- История ---
@@ -99,7 +99,7 @@ if calculate:
         "Порции": portions,
         "Калорийность (всего)": calories_total,
         "ХЕ по углеводам (всего)": xe_carbs_total,
-        "БЖЕ (всего)": xe_calories_total,
+        "БЖЕ (всего)": bje_total,
         "Общая ХЕ (всего)": xe_total_total
     })
 
@@ -143,8 +143,5 @@ with tab2:
 
 # --- Подпись ---
 st.markdown("---")
-st.caption("📘 Формулы: 10 г углеводов = 1 ХE | 100 ккал = 1 ХЕ")
+st.caption("📘 Формулы: 10 г углеводов = 1 ХE | 100 ккал от белков и жиров = 1 БЖЕ")
 st.caption("1 г белка = 4 ккал | 1 г жира = 9 ккал")
-
-
-
