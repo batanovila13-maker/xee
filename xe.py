@@ -78,6 +78,7 @@ st.button("Очистить историю", on_click=clear_history, use_contain
 if st.session_state.history:
     with st.expander("📜 Показать историю последних расчётов", expanded=False):
         for i, entry in enumerate(reversed(st.session_state.history[-5:]), 1):
+           st.button("Очистить историю", on_click=clear_history, use_container_width=True)
             st.write(f"**Расчёт {i}:**")
             st.write(f"Углеводы: {entry['Углеводы']} г, Белки: {entry['Белки']} г, Жиры: {entry['Жиры']} г")
             st.write(f"Калорийность: {entry['Калорийность']:.1f} ккал")
