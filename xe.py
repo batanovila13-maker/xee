@@ -7,31 +7,35 @@ st.set_page_config(
     layout="centered"
 )
 
-
 # --- Заголовок ---
 st.title("🍞 Калькулятор Хлебных Единиц (ХЕ)")
 st.write("Введите данные и получите расчёт ХЕ по углеводам, калорийности и общую сумму.")
 
+# --- Инициализация session_state ---
+for key in ["carbs", "protein", "fat"]:
+    if key not in st.session_state:
+        st.session_state[key] = 0.0
+
+# --- Функция сброса ---
+def reset_fields():
+    st.session_state.carbs = 0.0
+    st.session_state.protein = 0.0
+    st.session_state.fat = 0.0
+
 # --- Поля ввода ---
-carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, placeholder="Введите количество")
-protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, placeholder="Введите количество")
-fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, placeholder="Введите количество")
+carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, value=st.session_state.carbs, key="carbs")
+protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, value=st.session_state.protein, key="protein")
+fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, value=st.session_state.fat, key="fat")
 
 # --- Кнопки ---
 col1, col2 = st.columns(2)
-
 with col1:
     calculate = st.button("Рассчитать ХЕ", use_container_width=True, type="primary")
 with col2:
-    reset = st.button("Сбросить", use_container_width=True)
+    st.button("Сбросить", on_click=reset_fields, use_container_width=True)
 
-# --- Логика ---
-if reset:
-   st.rerun(scope="app")
-
-
+# --- Логика расчёта ---
 if calculate:
-    # Расчёт калорийности
     calories = (carbs * 4) + (protein * 4) + (fat * 9)
     xe_carbs = carbs / 10
     xe_calories = calories / 100
