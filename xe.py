@@ -1,5 +1,4 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 
 # --- Настройки страницы ---
 st.set_page_config(
@@ -103,17 +102,6 @@ if calculate:
         "БЖЕ (всего)": bje_total,
         "Общая ХЕ (всего)": xe_total_total
     })
-
-    # --- Круговая диаграмма ---
-    labels = ['ХЕ по углеводам', 'БЖЕ']
-    sizes = [xe_total_total, bje_total]
-    colors = ['#1E90FF', '#FFA500']  # ХЕ синий, БЖЕ оранжевый
-    explode = (0.05, 0.05)
-
-    fig, ax = plt.subplots()
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors, explode=explode, shadow=True)
-    ax.axis('equal')
-    st.pyplot(fig)
 
 # --- Вкладки ---
 tab1, tab2 = st.tabs(["📘 Как компенсировать БЖЕ?", "📜 История расчётов"])
