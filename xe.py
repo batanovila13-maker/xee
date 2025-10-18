@@ -1,9 +1,9 @@
 import streamlit as st
 
-# --- Настройки страницы ---
+# --- Настройки страницы с иконкой ---
 st.set_page_config(
     page_title="Калькулятор Хлебных Единиц",
-    page_icon="🍞",
+    page_icon="https://cdn-icons-png.flaticon.com/512/1046/1046784.png",  # иконка хлеба
     layout="centered"
 )
 
