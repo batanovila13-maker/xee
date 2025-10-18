@@ -6,7 +6,7 @@ st.set_page_config(
     page_icon="https://cdn-icons-png.flaticon.com/512/1046/1046784.png",  # иконка хлеба
     layout="centered"
 )
-
+#
 
 # --- Вставка apple-touch-icon для iOS и PWA ---
 st.markdown("""
