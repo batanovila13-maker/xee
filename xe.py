@@ -3,28 +3,9 @@ import streamlit as st
 # --- Настройки страницы ---
 st.set_page_config(
     page_title="Калькулятор Хлебных Единиц",
-    page_icon="https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
+    page_icon="🍞",
     layout="wide"
 )
-
-# --- PWA HTML блок ---
-st.markdown("""
-<link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register("service-worker.js")
-    .then(reg => console.log("Service Worker зарегистрирован:", reg.scope))
-    .catch(err => console.log("Ошибка регистрации Service Worker:", err));
-  });
-}
-</script>
-""", unsafe_allow_html=True)
 
 # --- Инициализация состояния ---
 for key in ["carbs", "protein", "fat", "portions", "history"]:
@@ -44,12 +25,13 @@ def reset_fields():
 def clear_history():
     st.session_state.history = []
 
-# --- Две колонки для двух расчётов ---
-col1, col2 = st.columns(2)
+# --- ВКЛАДКИ ---
+tab1, tab2 = st.tabs(["🧮 Основной расчёт", "⚖️ Расчёт по продукту"])
 
-# === 🧮 Основной расчёт ===
-with col1:
-    st.subheader("🧮 Основной расчёт по порциям")
+# === 🧮 Вкладка 1 — Основной расчёт ===
+with tab1:
+    st.subheader("Расчёт по порциям")
+
     carbs = st.number_input("Углеводы (г):", min_value=0.0, step=1.0, key="carbs")
     protein = st.number_input("Белки (г):", min_value=0.0, step=1.0, key="protein")
     fat = st.number_input("Жиры (г):", min_value=0.0, step=1.0, key="fat")
@@ -73,17 +55,18 @@ with col1:
         bje_total = bje_single * portions
         xe_total_total = xe_total_single * portions
 
-        st.success(f"✅ Результаты (для {portions} порций):")
-        st.metric("Общая калорийность", f"{calories_total:.1f} ккал")
-        st.metric("ХЕ по углеводам", f"{xe_carbs_total:.2f}")
-        st.metric("БЖЕ", f"{bje_total:.2f}")
-        st.metric("💠 Общая ХЕ", f"{xe_total_total:.2f}")
+        with st.container(border=True):
+            st.success(f"✅ Результаты (для {portions} порций):")
+            st.metric("Общая калорийность", f"{calories_total:.1f} ккал")
+            st.metric("ХЕ по углеводам", f"{xe_carbs_total:.2f}")
+            st.metric("БЖЕ", f"{bje_total:.2f}")
+            st.metric("💠 Общая ХЕ", f"{xe_total_total:.2f}")
 
-        st.info("На 1 порцию:")
-        st.write(f"Ккал: {calories_total / portions:.1f}")
-        st.write(f"ХЕ по углеводам: {xe_carbs_total / portions:.2f}")
-        st.write(f"БЖЕ: {bje_total / portions:.2f}")
-        st.write(f"💠 Общая ХЕ: {xe_total_total / portions:.2f}")
+            st.info("На 1 порцию:")
+            st.write(f"Ккал: {calories_total / portions:.1f}")
+            st.write(f"ХЕ по углеводам: {xe_carbs_total / portions:.2f}")
+            st.write(f"БЖЕ: {bje_total / portions:.2f}")
+            st.write(f"💠 Общая ХЕ: {xe_total_total / portions:.2f}")
 
         # Добавляем в историю
         st.session_state.history.append({
@@ -98,9 +81,10 @@ with col1:
             "Общая ХЕ (всего)": xe_total_total
         })
 
-# === ⚖️ Расчёт по продукту ===
-with col2:
-    st.subheader("⚖️ Расчёт по продукту (на 100 г)")
+# === ⚖️ Вкладка 2 — Расчёт по продукту ===
+with tab2:
+    st.subheader("Расчёт по продукту (на 100 г)")
+
     carbs_100 = st.number_input("Углеводы (г/100 г):", min_value=0.0, step=0.1, key="carbs_100")
     protein_100 = st.number_input("Белки (г/100 г):", min_value=0.0, step=0.1, key="protein_100")
     fat_100 = st.number_input("Жиры (г/100 г):", min_value=0.0, step=0.1, key="fat_100")
@@ -117,18 +101,19 @@ with col2:
         bje = (protein_total * 4 + fat_total * 9) / 100
         xe_total = xe_carbs + bje
 
-        st.success("✅ Результаты для продукта:")
-        st.metric("Масса", f"{mass:.0f} г")
-        st.metric("ХЕ по углеводам", f"{xe_carbs:.2f}")
-        st.metric("БЖЕ", f"{bje:.2f}")
-        st.metric("💠 Общая ХЕ", f"{xe_total:.2f}")
-        st.metric("Калорийность", f"{calories_total:.1f} ккал")
+        with st.container(border=True):
+            st.success("✅ Результаты для продукта:")
+            st.metric("Масса", f"{mass:.0f} г")
+            st.metric("ХЕ по углеводам", f"{xe_carbs:.2f}")
+            st.metric("БЖЕ", f"{bje:.2f}")
+            st.metric("💠 Общая ХЕ", f"{xe_total:.2f}")
+            st.metric("Калорийность", f"{calories_total:.1f} ккал")
 
-        st.info(f"""
-        **Углеводов:** {carbs_total:.1f} г  
-        **Белков:** {protein_total:.1f} г  
-        **Жиров:** {fat_total:.1f} г
-        """)
+            st.info(f"""
+            **Углеводов:** {carbs_total:.1f} г  
+            **Белков:** {protein_total:.1f} г  
+            **Жиров:** {fat_total:.1f} г
+            """)
 
         # Добавляем в историю
         st.session_state.history.append({
@@ -179,6 +164,5 @@ if st.session_state.history:
 else:
     st.info("История пока пуста.")
 
-# --- Подпись ---
 st.caption("📘 Формулы: 10 г углеводов = 1 ХE | 100 ккал от белков и жиров = 1 БЖЕ")
 st.caption("1 г белка = 4 ккал | 1 г жира = 9 ккал")
